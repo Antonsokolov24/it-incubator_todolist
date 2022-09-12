@@ -1,0 +1,24 @@
+.App {
+    padding: 30px;
+    display: flex;
+}
+
+.App > div {
+    margin-right: 50px;
+}
+
+.isDone {
+    color: green;
+    font-weight: bold;
+    text-decoration: line-through;
+}
+
+.btn-active {
+    color: white;
+    background-color: green;
+    border: 2px solid green;
+}
+.error {
+    border: 2px solid green;
+    outline: none;
+}

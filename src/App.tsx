@@ -19,15 +19,19 @@ function App() {
 
 
     const removeTask = (taskID: string) => {
-        setTasks(tasks.filter(task => task.id !== taskID))
+        setTasks(tasks.filter(task => task.id !== taskID)) //удаляет новую таску
         console.log(tasks)
     }
     const changeFilter = (filter: FilterValuesType) => {
         setFilter(filter)
     }
     const addTask = (title: string) => {
-        setTasks([{id: v1(), title, isDone: false},...tasks])
+        setTasks([{id: v1(), title, isDone: false}, ...tasks]) //добавляет новую таску
     }
+    const changeTaskStatus = (taskID: string, isDone: boolean) => {
+        setTasks(tasks.map(t => t.id === taskID ? {...t, isDone} : t)) //фильтрация выбранной таски выбрана не выбрана
+    }
+
 
     //UI:
     let tasksForRender;
@@ -50,6 +54,8 @@ function App() {
                 removeTask={removeTask}
                 changeFilter={changeFilter}
                 addTask={addTask}
+                changeTaskStatus={changeTaskStatus}
+                filter={filter}
             />
             {/*<Todolist title={"What to buy"}/>*/}
             {/*<Todolist title={"What to read"}/>*/}
