@@ -2,34 +2,39 @@ import React, {FC, PropsWithChildren, useState, KeyboardEvent, ChangeEvent} from
 import {FilterValuesType} from "./App";
 import {keyboardKey} from "@testing-library/user-event";
 
-export type TodolistPropsType = {
-    title: string
-    tasks: Array<TaskType>
-    removeTask: (taskID: string) => void
-    changeFilter: (filter: FilterValuesType) => void
-    addTask: (title: string) => void
-    changeTaskStatus: (taskID: string, isDone: boolean) => void
-    filter: FilterValuesType
-}
 export type TaskType = {
     id: string
     title: string
     isDone: boolean
 }
+
+export type TodolistPropsType = {
+    todoListID: string
+    title: string
+    tasks: Array<TaskType>
+    filter: FilterValuesType
+    removeTask: (taskID: string, todoListID: string) => void
+    removeTodoList: (todoListID: string) => void
+    changeTodoListFilter: (filter: FilterValuesType, todoListID: string) => void
+    addTask: (title: string, todoListID: string) => void
+    changeTaskStatus: (taskID: string, isDone: boolean, todoListID: string) => void
+
+}
+
 export const Todolist: FC<TodolistPropsType> = (props: PropsWithChildren<TodolistPropsType>) => {
     console.log("Todo")
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
-    const tasksItems = props.tasks.length//проверяет длинну массива  и выводит сообщение если нет тасок
+    const tasksItems = props.tasks.length//проверяет длину массива и выводит сообщение если нет тасок
         ? props.tasks.map((task: TaskType) => {
             return (
                 <li key={task.id}>
                     <input
-                        onChange={(e) => props.changeTaskStatus(task.id, e.currentTarget.checked)}//меняем статус выбран/не выбран
+                        onChange={(e) => props.changeTaskStatus(task.id, e.currentTarget.checked, props.todoListID)}//меняем статус выбран/не выбран
                         type="checkbox"
                         checked={task.isDone}/>
                     <span className={task.isDone ? "isDone" : ""}>{task.title}</span>
-                    <button onClick={() => props.removeTask(task.id)}>x</button>
+                    <button onClick={() => props.removeTask(task.id, props.todoListID)}>x</button>
                 </li>
             )
         })
@@ -39,7 +44,7 @@ export const Todolist: FC<TodolistPropsType> = (props: PropsWithChildren<Todolis
     const onClickAddTask = () => { //добавляет только если есть текст, исключает добавление пробелов
         const trimmedTitle = title.trim()
         if (trimmedTitle) {
-            props.addTask(trimmedTitle)
+            props.addTask(trimmedTitle, props.todoListID)
         } else {
             setError(true)
         }
@@ -50,23 +55,20 @@ export const Todolist: FC<TodolistPropsType> = (props: PropsWithChildren<Todolis
         error && setError(false) // снимает состояние ошибки с инпут
         setTitle(e.currentTarget.value)
     }
-    const onClickSetFilterAll = () => props.changeFilter("all")
-    const onClickSetFilterActive = () => props.changeFilter("active")
-    const onClickSetFilterCompleted = () => props.changeFilter("completed")
+    const onClickFilterCreator = (filter: FilterValuesType)  => (() => props.changeTodoListFilter(filter, props.todoListID))
+    const inputErrorClass = error ? "error" : ""
+    const errorMessage = <div style={{color: "green"}}>Title is required!</div>
 
-    //const onClickFilterCreator = (filter: FilterValuesType) => () => props.changeFilter(filter)
-    const onClickFilterCreator = (filter: FilterValuesType) => {
-        return () => props.changeFilter(filter)
-    }
     return (
         <div>
-            <h3>{props.title}</h3>
+            <h3>{props.title}
+            <button onClick={() => props.removeTodoList(props.todoListID)}>X</button> </h3>
             <div>
                 <input
                     value={title} //очищает после ввода ссылаясь на title
                     onChange={onChangeSetTitle}
                     onKeyDown={onKeyDownAddTask}
-                    className={error ? "error" : ""}
+                    className={inputErrorClass}
                 />
                 <button onClick={onClickAddTask}>+</button>
                 {error && <div style={{color: "green"}}>Title is required!</div>}
