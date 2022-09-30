@@ -1,11 +1,11 @@
-.App {
-    padding: 30px;
-    display: flex;
-}
+/*.App {*/
+/*    padding: 30px;*/
+/*    display: flex;*/
+/*}*/
 
-.App > div {
-    margin-right: 50px;
-}
+/*.App > div {*/
+/*    margin-right: 50px;*/
+/*}*/
 
 .isDone {
     color: green;
@@ -13,12 +13,12 @@
     text-decoration: line-through;
 }
 
-.btn-active {
-    color: white;
-    background-color: green;
-    border: 2px solid green;
-}
-.error {
-    border: 2px solid green;
-    outline: none;
-}
+/*.btn-active {*/
+/*    color: white;*/
+/*    background-color: green;*/
+/*    border: 2px solid green;*/
+/*}*/
+/*.error {*/
+/*    border: 2px solid green;*/
+/*    outline: none;*/
+/*}*/
