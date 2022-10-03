@@ -9,7 +9,7 @@ import {Menu} from "@mui/icons-material";
 
 export type FilterValuesType = "all" | "active" | "completed"
 
-type TodoListType = {
+export type TodoListType = {
     id: string
     title: string
     filter: FilterValuesType
@@ -74,44 +74,46 @@ function App() {
 
 
     //UI:
-
-
-    const todoListComponents = todoLists.map(tl => {
+    const getTasksForRender = (todoLists: TodoListType, tasks: TaskStateType) => {
         let tasksForRender;
-        switch (tl.filter) {
+        switch (todoLists.filter) {
             case "completed":
-                tasksForRender = tasks[tl.id].filter(task => task.isDone)
+                tasksForRender = tasks[todoLists.id].filter(task => task.isDone)
                 break
             case "active":
-                tasksForRender = tasks[tl.id].filter(task => !task.isDone)
+                tasksForRender = tasks[todoLists.id].filter(task => !task.isDone)
                 break
             default:
-                tasksForRender = tasks[tl.id];
+                tasksForRender = tasks[todoLists.id];
         }
+        return tasksForRender
+    }
+
+    const todoListComponents = todoLists.map(tl => {
         return (
             <Grid item key={tl.id}>
-            <Paper elevation={2} style={{padding: "20px"}}>
-                <Todolist
-                    todoListID={tl.id}
-                    title={tl.title}
-                    tasks={tasksForRender}
-                    filter={tl.filter}
-                    removeTask={removeTask}
-                    changeTodoListFilter={changeTodoListFilter}
-                    addTask={addTask}
-                    changeTaskStatus={changeTaskStatus}
-                    removeTodoList={removeTodoList}
-                    changeTodoListTitle={changeTodoListTitle}
-                    changeTaskTitle={changeTaskTitle}
-                />
-            </Paper>
+                <Paper elevation={2} style={{padding: "20px"}}>
+                    <Todolist
+                        todoListID={tl.id}
+                        title={tl.title}
+                        tasks={getTasksForRender(tl, tasks)}
+                        filter={tl.filter}
+                        removeTask={removeTask}
+                        changeTodoListFilter={changeTodoListFilter}
+                        addTask={addTask}
+                        changeTaskStatus={changeTaskStatus}
+                        removeTodoList={removeTodoList}
+                        changeTodoListTitle={changeTodoListTitle}
+                        changeTaskTitle={changeTaskTitle}
+                    />
+                </Paper>
             </Grid>
         )
     })
     return (
         <div className="App">
             <AppBar position="static">
-                <Toolbar style={{justifyContent: "space-between", background:"teal"}}>
+                <Toolbar style={{justifyContent: "space-between", background: "teal"}}>
                     <IconButton edge="start" color="inherit" arial-label="menu">
                         <Menu/>
                     </IconButton>
